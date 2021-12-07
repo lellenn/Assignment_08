@@ -7,6 +7,8 @@
 # LWarner, 2021-Dec-05, added code and docstrings for functionality
 #------------------------------------------#
 
+import pprint
+
 # -- DATA -- #
 strFileName = 'cdInventory.txt'
 lstOfCDObjects = []
@@ -79,7 +81,8 @@ class DataProcessor:
         Returns:
             Shows inventory
         """
-        objRow["ID"] = int(objRow["ID"])
+        pprint.pprint(objRow)
+        objRow[0] = int(objRow[0])
         lstOfCDObjects.append(objRow)
    
     @staticmethod   
@@ -97,7 +100,7 @@ class DataProcessor:
         blnCDRemoved = False
         for row in lstTbl:
            intRowNr += 1
-           if row['ID'] == intIDDel:
+           if row[0] == intIDDel:
                del lstTbl[intRowNr]
                blnCDRemoved = True
                break
@@ -154,7 +157,7 @@ class FileIO:
         try:
             objFile = open(strFileName, 'w')
             for row in lstOfCDObjects:
-                lstValues = list(row.values())
+                lstValues = list(row)
                 lstValues[0] = str(lstValues[0])
                 objFile.write(','.join(lstValues) + '\n')
             objFile.close()
@@ -211,7 +214,7 @@ class IO:
         print('======= The Current Inventory: =======')
         print('ID\tCD Title (by: Artist)\n')
         for row in lstOfCDObjects:
-            print('{}\t{} (by:{})'.format(*row.values()))
+            print('{}\t{} (by:{})'.format(*row))
         print('======================================')
 
     @staticmethod
@@ -258,7 +261,7 @@ while True:
         strYesNo = input('type \'yes\' to continue and reload from file. otherwise reload will be canceled: ')
         if strYesNo.lower() == 'yes':
             print('reloading...')
-            FileIO.load_inventory(strFileName, lstOfCDObjects)
+            FileIO.load_inventory(strFileName)
             IO.show_inventory(lstOfCDObjects)
         else:
             input('canceling... Inventory data NOT reloaded. Press [ENTER] to continue to the menu.')
